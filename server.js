@@ -13,7 +13,8 @@ const PORT = process.env.PORT || 4000;
 const allowedOrigins = [
   'http://localhost:3000',
   'https://camrilla-admin-dashboard.vercel.app',
-  'https://camrilla-admin-dashboard-lime.vercel.app'
+  'https://camrilla-admin-dashboard-lime.vercel.app',
+  'https://dash.camrilla.com/'
 ];
 
 app.use(cors({
