@@ -49,4 +49,5 @@ router.post('/admin/login', adminController.loginAdmin);
 // router.get('/admin/check', adminController.checkAdminAuth); //
 router.get('/revenue/month-year',revenueController.getProfessionalPlanRevenueByMonthYear);
 router.get('/stats-count', getController.getStatsCount);
+router.get('/users-with-transactions', userController.getUsersWithTransactions);
 module.exports = router;
