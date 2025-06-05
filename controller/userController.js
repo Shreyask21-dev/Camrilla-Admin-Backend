@@ -201,24 +201,24 @@ exports.getNewUsersWithDetails = (req, res) => {
 };
 exports.getUsersWithTransactions = (req, res) => {
   const sql = `
-    SELECT 
-      u.id AS user_id,
-      CONCAT(u.first_name, ' ', u.last_name) AS name,
-      u.email,
-      u.mobile,
-      up.plan_status
-    FROM user u
-    INNER JOIN user_payment p ON u.id = p.user_id
-    LEFT JOIN (
-      SELECT up1.*
-      FROM user_plan up1
-      INNER JOIN (
-        SELECT user_id, MAX(start_date) AS latest_start
-        FROM user_plan
-        GROUP BY user_id
-      ) up2 ON up1.user_id = up2.user_id AND up1.start_date = up2.latest_start
-    ) up ON u.id = up.user_id
-    GROUP BY u.id
+   SELECT DISTINCT
+  u.id AS user_id,
+  CONCAT(u.first_name, ' ', u.last_name) AS name,
+  u.email,
+  u.mobile,
+  up.plan_status
+FROM user u
+INNER JOIN user_payment p ON u.id = p.user_id
+LEFT JOIN (
+  SELECT up1.*
+  FROM user_plan up1
+  INNER JOIN (
+    SELECT user_id, MAX(start_date) AS latest_start
+    FROM user_plan
+    GROUP BY user_id
+  ) up2 ON up1.user_id = up2.user_id AND up1.start_date = up2.latest_start
+) up ON u.id = up.user_id;
+
   `;
 
   db.query(sql, (err, results) => {
