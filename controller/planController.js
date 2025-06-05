@@ -190,6 +190,8 @@ exports.getAnalytics = (req, res) => {
     ORDER BY user_count DESC
     LIMIT 1
   `;
+  const basicPlansQuery = `SELECT COUNT(*) AS basic_plan_count FROM plan_master WHERE LOWER(plan_name) LIKE '%basic%'`;
+  const professionalPlansQuery = `SELECT COUNT(*) AS professional_plan_count FROM plan_master WHERE LOWER(plan_name) LIKE '%professional%'`;
 
   db.query(countryQuery, (err, countryResult) => {
     if (err) return res.status(500).json({ error: 'Error fetching country count' });
@@ -202,16 +204,24 @@ exports.getAnalytics = (req, res) => {
       db.query(mostUsedQuery, (err, mostUsedResult) => {
         if (err) return res.status(500).json({ error: 'Error fetching most used plan' });
 
-        if (mostUsedResult.length > 0) {
-          results.most_used_plan = {
-            plan_name: mostUsedResult[0].plan_name,
-            user_count: mostUsedResult[0].user_count,
-          };
-        } else {
-          results.most_used_plan = null;
-        }
+        results.most_used_plan = mostUsedResult.length > 0
+          ? {
+              plan_name: mostUsedResult[0].plan_name,
+              user_count: mostUsedResult[0].user_count,
+            }
+          : null;
 
-        res.json(results);
+        db.query(basicPlansQuery, (err, basicResult) => {
+          if (err) return res.status(500).json({ error: 'Error fetching basic plan count' });
+          results.basic_plan_count = basicResult[0].basic_plan_count;
+
+          db.query(professionalPlansQuery, (err, profResult) => {
+            if (err) return res.status(500).json({ error: 'Error fetching professional plan count' });
+            results.professional_plan_count = profResult[0].professional_plan_count;
+
+            res.json(results);
+          });
+        });
       });
     });
   });
