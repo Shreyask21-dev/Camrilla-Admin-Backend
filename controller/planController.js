@@ -180,7 +180,8 @@ exports.addPlan = (req, res) => {
 exports.getAnalytics = (req, res) => {
   const results = {};
 
-  const countryQuery = `SELECT COUNT(DISTINCT country) AS total_country_count FROM user`;
+  const countryQuery = `SELECT COUNT(DISTINCT country) AS total_country_count FROM plan_master`;
+
   const plansQuery = `SELECT COUNT(*) AS total_plans FROM plan_master`;
   const mostUsedQuery = `
     SELECT pm.plan_name, COUNT(up.user_id) AS user_count
