@@ -6,6 +6,7 @@ exports.getTransactionHistory = (req, res) => {
       up.id AS transaction_id,
       CONCAT(u.first_name, ' ', u.last_name) AS user_name,
       u.email,
+      u.country AS country_code,
       up.amount,
       FROM_UNIXTIME(up.payment_date / 1000) AS date,
       up.payment_mode AS payment_method,
@@ -24,6 +25,7 @@ exports.getTransactionHistory = (req, res) => {
     res.json(results);
   });
 };
+
 exports.getUserWithTransactions = (req, res) => {
   const userId = req.params.id;
 
